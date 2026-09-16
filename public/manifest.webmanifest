@@ -1,0 +1,10 @@
+{
+  "name": "Marvel Tower Defense",
+  "short_name": "Marvel TD",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": []
+}
