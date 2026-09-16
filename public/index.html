@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Marvel Tower Defense</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="home" class="screen active">
+      <div class="brand">
+        <div class="brand-kicker">PIXEL HEROES</div>
+        <h1>MARVEL<br><span>TOWER DEFENSE</span></h1>
+        <p>Defenda a cidade, evolua seus heróis e sobreviva a fases procedurais.</p>
+      </div>
+
+      <div class="wallet glass">
+        <span>🪙 <b id="homeCoins">0</b></span>
+        <span>💎 <b id="homeDiamonds">0</b></span>
+        <span>🏁 Fase <b id="homeStage">1</b></span>
+      </div>
+
+      <div class="hero-showcase">
+        <div class="pixel-hero spider big" aria-label="Homem-Aranha"></div>
+        <div class="pixel-hero iron big" aria-label="Homem de Ferro"></div>
+      </div>
+
+      <button id="playBtn" class="primary">JOGAR</button>
+      <button id="heroesBtn" class="secondary">HERÓIS & UPGRADES</button>
+      <div class="tip">Toque duas vezes durante a partida para tentar entrar em tela cheia.</div>
+    </section>
+
+    <section id="heroes" class="screen">
+      <header class="topbar">
+        <button class="iconBtn" data-back>←</button>
+        <div><small>COLEÇÃO</small><strong>HERÓIS</strong></div>
+        <div class="miniWallet">🪙 <b id="shopCoins">0</b> · 💎 <b id="shopDiamonds">0</b></div>
+      </header>
+
+      <div id="heroGrid" class="hero-grid"></div>
+
+      <div class="exchange glass">
+        <div><strong>Conversor</strong><small>1000 moedas = 1 diamante</small></div>
+        <button id="exchangeBtn">CONVERTER</button>
+      </div>
+    </section>
+
+    <section id="game" class="screen game-screen">
+      <div class="game-hud">
+        <div>❤️ <b id="lives">20</b></div>
+        <div>🪙 <b id="battleCoins">0</b></div>
+        <div class="round">FASE <b id="stageLabel">1</b><small>ONDA <span id="waveLabel">1/5</span></small></div>
+        <button id="pauseBtn" class="iconBtn">Ⅱ</button>
+      </div>
+
+      <canvas id="gameCanvas"></canvas>
+
+      <div id="heroBar" class="hero-bar">
+        <button class="hero-card selected" data-hero="spider">
+          <span class="portrait spider"></span>
+          <b>ARANHA</b><small>🪙 120</small>
+        </button>
+        <button class="hero-card" data-hero="iron">
+          <span class="portrait iron"></span>
+          <b>FERRO</b><small>🪙 180</small>
+        </button>
+      </div>
+
+      <div id="message" class="message"></div>
+    </section>
+
+    <section id="result" class="screen result-screen">
+      <div class="result-card glass">
+        <div class="stars">★ ★ ★</div>
+        <h2>FASE CONCLUÍDA</h2>
+        <p>As ameaças ficaram mais fortes. Seus heróis também.</p>
+        <div class="reward"><span>+<b id="rewardCoins">0</b> 🪙</span><span id="rewardDiamondWrap">+<b id="rewardDiamonds">0</b> 💎</span></div>
+        <button id="nextStageBtn" class="primary">PRÓXIMA FASE</button>
+        <button id="resultHomeBtn" class="secondary">MENU</button>
+      </div>
+    </section>
+
+    <div id="pauseOverlay" class="overlay">
+      <div class="modal glass">
+        <h2>PAUSADO</h2>
+        <button id="resumeBtn" class="primary">CONTINUAR</button>
+        <button id="quitBtn" class="secondary">SAIR</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/game.js"></script>
+</body>
+</html>
