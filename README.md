@@ -10,11 +10,11 @@ Requires Node 20 or later. `npm start` serves port 3000 (or `PORT`). `npm test` 
 
 - 9 complete heroes; Spider-Man and Iron Man start unlocked.
 - Four rotating biomes and seeded, connected procedural paths. Each mission generates a new route.
-- 5–8 manually started waves, three enemy classes and an end-of-mission boss. Difficulty scales with campaign progress.
+- 5–8 automatically started waves, three enemy classes and an end-of-mission boss. Difficulty scales with campaign progress.
 - Deployment uses mission energy; defeated enemies and completed waves grant energy. Up to 12 units can be placed, with duplicate heroes permitted.
 - Ultimates charge only during active waves. A green bar indicates readiness; tap the unit to activate. Spider-Man pulls only webbed enemies by 3 cells; Iron Man has a directional 4-cell beam.
 - Persistent gold is awarded after each mission. 100 gold converts to 1 diamond. Unlock costs range from 3 to 6 diamonds. Upgrades cost 100 × current level, capped at level 10.
-- Animated native pixel sprite atlases: idle, attack, cast, and walking frames. Different silhouettes, palettes, equipment and combat effects for each hero.
+- Animated native pixel sprite atlases: six idle, attack, cast, and walking frames per state. Different silhouettes, palettes, equipment and combat effects for each hero.
 - Pause, 2× speed, unit sale (65% energy), optional synthesized sound, help and installation instructions.
 
 ## Persistence / phones
@@ -43,3 +43,14 @@ This is an unofficial fan game. Marvel characters belong to their respective own
 - New high-detail hero sprites remain pending: the first generation failed automatic image moderation and the following request reached the image-generation usage limit. Existing character animations are retained. No replacement hero images are claimed in this version.
 
 Artwork: `public/assets/terrain-v3.png` was generated with the built-in image-generation tool. See `public/assets/ARTWORK.md` for its prompt and layout.
+
+
+## Version 4.0 changes
+
+- Waves require no button: an 8-second opening countdown automatically starts wave 1; clearing a wave grants 70 energy and begins a 4-second countdown to the next wave. No defenders are auto-placed; positioning is still the player's decision. The wave button was replaced by a progress/status strip.
+- Countdown lives in simulation time. Pause, hero panels, the in-mission shop and a hidden tab stop it. Finished battles never restart automatically. The mission results remain a deliberate checkpoint for upgrades.
+- Characters use six animation frames per action. Attack and ultimate frames now begin with the corresponding action, not a random point in a global animation clock. Walking alternates leg poses; ultimate and regular attacks have separate timing/state.
+- New transparent PNG power atlas: six frames each of web, explosion, electricity and magic. Impacts and status nets use this artwork. Hero-specific missile, arrow, spinning shield, hammer, fireball, magic disk and pixel beam renderers replace generic projectile dots.
+- New high-detail character art is still pending: the Spider-Man image request received automatic output moderation (`other`, no detailed reason). No new character sheet was produced or substituted. The changes above improve the existing native animation implementation only.
+
+Artwork details and the exact image-generation prompt are in `public/assets/ARTWORK.md`.

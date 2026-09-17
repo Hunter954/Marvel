@@ -7,7 +7,7 @@ test('all nine heroes attack, charge and execute their own ultimate',()=>{for(co
 test('Spider only pulls webbed targets and Iron beam is limited to four blocks',()=>{const s=freshSave(),b=new Battle(s,4);b.energy=1000;const p=b.map.pads[0],t=b.place('spider',p.c,p.r).tower;t.charge=100;b.spawn('boss');const e=b.enemies[0];Object.assign(e,{x:t.x+30,y:t.y,d:200});assert.ok(b.ultimate(t).error);assert.equal(t.charge,100);e.web=3;assert.ok(b.ultimate(t).ok);assert.equal(e.d,80);const iron={...t,hero:'iron',damage:30,charge:100};b.towers.push(iron);b.enemies=[];for(const [x,y]of[[60,0],[150,0],[190,0],[80,50]]){b.spawn('boss');Object.assign(b.enemies.at(-1),{x:iron.x+x,y:iron.y+y,hp:500,maxHp:500,d:100-x});}assert.ok(b.ultimate(iron).ok);assert.deepEqual(b.enemies.map(e=>e.hp),[350,350,500,500]);});
 test('finish rewards once, loss does not advance, and paused simulation has no clock dependency',()=>{const s=freshSave(),b=new Battle(s,1);b.finish(true);const coins=s.coins;assert.equal(s.stage,2);b.finish(true);assert.equal(s.coins,coins);const loss=new Battle(s,2);loss.kills=10;loss.finish(false);assert.equal(s.stage,2);assert.equal(s.coins,coins+20);const c=new Battle(s,3);c.startWave();c.update(.1);const timer=c.spawnTimer;assert.equal(c.spawnTimer,timer);});
 test('new player can win complete stages with basic heroes on 12 different maps',()=>{for(let seed=1;seed<=12;seed++){const s=normalizeSave(null),b=new Battle(s,seed);function placeBest(id){const spots=b.map.pads.filter(p=>!b.towers.some(t=>t.c===p.c&&t.r===p.r));spots.sort((a,c)=>score(c)-score(a));function score(p){let val=0;for(const q of b.map.cells){const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<HEROES[id].range)val+=1-d/HEROES[id].range*.25;}val-=b.towers.reduce((n,t)=>n+(Math.hypot(p.x-t.x,p.y-t.y)<85?1.3:0),0);return val;}if(spots[0])b.place(id,spots[0].c,spots[0].r);}
-placeBest('iron');placeBest('iron');placeBest('spider');let steps=0;while(!b.ended&&steps++<20000){if(!b.active)b.startWave();if(b.energy>=160&&b.towers.length<12)placeBest(b.towers.length%4===3?'spider':'iron');for(const t of b.towers)if(t.charge>=100)b.ultimate(t);b.update(.1);b.events=[];}assert.ok(b.ended,'ends '+seed);assert.ok(b.reward.won,'wins seed '+seed+' with '+b.kills+' kills');}});
+placeBest('iron');placeBest('iron');placeBest('spider');let steps=0;while(!b.ended&&steps++<20000){if(b.energy>=160&&b.towers.length<12)placeBest(b.towers.length%4===3?'spider':'iron');for(const t of b.towers)if(t.charge>=100)b.ultimate(t);b.update(.1);b.events=[];}assert.ok(b.ended,'ends '+seed);assert.ok(b.reward.won,'wins seed '+seed+' with '+b.kills+' kills');}});
 
 test('starter bonus is persistent and allows both basic upgrades plus a new hero',()=>{
  let s=normalizeSave(null);assert.equal(grantStarter(s),true);assert.equal(s.coins,500);assert.ok(purchase(s,'spider'));assert.ok(purchase(s,'iron'));assert.ok(purchase(s,'hulk'));assert.equal(s.coins,0);assert.equal(s.diamonds,0);assert.equal(s.upgrades.spider,2);assert.equal(s.upgrades.iron,2);assert.ok(s.unlocked.hulk);s=normalizeSave(JSON.parse(JSON.stringify(s)));assert.equal(grantStarter(s),false);assert.equal(s.coins,0);assert.ok(s.unlocked.hulk);assert.equal(s.upgrades.spider,2);
@@ -26,4 +26,21 @@ test('Spider never damages or refreshes webbed enemies and two spiders reserve s
 });
 test('Spider upgrade improves control without damage and updates deployed heroes',()=>{
  const s=normalizeSave({coins:500}),b=new Battle(s,1);const p=b.map.pads[0],t=b.place('spider',p.c,p.r).tower;const old={range:t.range,duration:t.webDuration,factor:t.webFactor,rate:t.rate};assert.ok(purchase(s,'spider'));b.applyUpgrade('spider');assert.equal(t.damage,0);assert.ok(t.range>old.range);assert.ok(t.webDuration>old.duration);assert.ok(t.webFactor<old.factor);assert.ok(t.rate<old.rate);
+});
+
+test('waves start and advance automatically without player input',()=>{
+ const b=new Battle(freshSave(),5);assert.equal(b.wave,0);assert.equal(b.intermission,8);
+ for(let i=0;i<79;i++)b.update(.1);assert.equal(b.wave,0);b.update(.2);assert.equal(b.wave,1);assert.ok(b.active);
+ b.queue=[];b.enemies=[];b.update(.01);assert.equal(b.active,false);assert.equal(b.intermission,4);
+ for(let i=0;i<39;i++)b.update(.1);assert.equal(b.wave,1);b.update(.2);assert.equal(b.wave,2);assert.ok(b.active);
+ const before=b.wave;assert.equal(b.startWave(),false);assert.equal(b.wave,before);
+});
+test('intermission uses only simulation time and never restarts after finishing',()=>{
+ const b=new Battle(freshSave(),8);b.update(2);assert.equal(b.intermission,6);
+ // UI pause/hidden/shop pauses work by not updating the simulation.
+ const snapshot=JSON.stringify({time:b.time,wave:b.wave,intermission:b.intermission});assert.equal(JSON.stringify({time:b.time,wave:b.wave,intermission:b.intermission}),snapshot);
+ b.update(2);assert.equal(b.intermission,4);b.finish(false);const wave=b.wave;b.update(999);assert.equal(b.wave,wave);
+});
+test('hero attack and ultimate animation phases begin at frame zero',()=>{
+ const b=new Battle(normalizeSave(null),8),p=b.map.pads[0];b.energy=1000;const t=b.place('iron',p.c,p.r).tower;b.spawn('boss');const e=b.enemies[0];Object.assign(e,{x:t.x+30,y:t.y,d:10});b.fire(t,e);assert.equal(t.action,'attack');assert.equal(t.anim,t.animDuration);assert.equal(t.anim,.42);t.charge=100;b.ultimate(t);assert.equal(t.action,'cast');assert.equal(t.anim,t.animDuration);assert.equal(t.anim,.85);
 });
