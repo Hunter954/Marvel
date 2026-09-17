@@ -31,3 +31,15 @@ PWA manifest, icons and an offline service worker are included. Android requests
 - `tests/engine.test.js`: map validity, economy, nine heroes, ultimate bounds, rewards and complete first-stage simulations.
 
 This is an unofficial fan game. Marvel characters belong to their respective owners.
+
+## Version 3.0 changes
+
+- Spider-Man deals **zero damage**. Web duration and ordinary slow are separate statuses, so other slows do not count as webs. Spiders skip enemies that already have web or an incoming web projectile from any Spider-Man. Webs can be applied again only after expiry.
+- Spider-Man upgrades improve web duration, slow strength, range and firing rate; damage stays at zero. His ultimate pulls only webbed targets.
+- A one-time 500 gold starter bonus is recorded by `starterGrant` without resetting an existing campaign. Spending persists after reload.
+- Hero unlock quotes automatically combine owned diamonds with only the gold needed for missing diamonds, using the existing 100:1 exchange. Insufficient purchases are atomic and show the exact missing amount. The UI clearly distinguishes persistent gold from battle energy.
+- The pause menu opens the shop and returns to the same paused battle. Permanent upgrades can also be bought in a unit's panel and apply immediately to all deployed units of that hero.
+- Four PNG ground/paving texture pairs now render the procedural battle maps. Canvas fits its logical 3:4 ratio instead of stretching.
+- New high-detail hero sprites remain pending: the first generation failed automatic image moderation and the following request reached the image-generation usage limit. Existing character animations are retained. No replacement hero images are claimed in this version.
+
+Artwork: `public/assets/terrain-v3.png` was generated with the built-in image-generation tool. See `public/assets/ARTWORK.md` for its prompt and layout.
