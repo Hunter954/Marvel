@@ -3,3 +3,10 @@
 .shop-help{padding:0 16px 12px;color:#bdd3de;font-size:11px;line-height:1.55}.purchase-note{display:block;min-height:28px;margin-top:7px;color:#afc5d3;font-size:9px;line-height:1.4}.buy-btn.affordable{background:#2e6251;border-color:#78aa76;color:#e5ffd7!important}.buy-btn.unaffordable{background:#27394a;color:#9aacb8}.hero-grid{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.shop-info .buy-btn{min-height:44px}.shop-portrait{height:118px}#boardWrap{background:#14272d}#heroes .topbar,#heroes .shop-intro,#heroes .shop-help,#heroes .exchange{flex-shrink:0}
 
 .wave-status{position:relative;overflow:hidden;min-height:41px;border:1px solid #597667;border-radius:7px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;font-size:9px;font-weight:800;letter-spacing:.8px;color:#e4f4db;background:#223e3c;isolation:isolate}.wave-status:before{content:"";position:absolute;inset:0;right:auto;width:var(--wave-progress,0%);background:#4c79564d;z-index:-1;transition:width .12s linear}.wave-status strong{color:#ffdd8b;font:800 11px ui-monospace,monospace}.wave-status.active-wave{background:#203447;border-color:#426073}.wave-status.active-wave:before{background:transparent}.wave-status.active-wave strong{color:#9be4e7}
+
+/* Keep the full purchase panel in each scrollable row; never compress cards to portrait height. */
+.hero-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;align-items:start}
+.shop-card{min-width:0}
+button.shop-portrait{width:100%;padding:0;color:inherit;border-radius:0;flex-shrink:0}
+button.shop-portrait:focus-visible{outline-offset:-4px}
+.detail-balance{padding:12px;background:#102538;border:1px solid #405b6b;border-radius:7px}

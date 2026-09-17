@@ -1,4 +1,4 @@
-import {HEROES,BIOMES,random} from './engine.js?v=4.0.0';
+import {HEROES,BIOMES,random} from './engine.js?v=4.0.1';
 const terrainImage=new Image(),powerImage=new Image();
 const loadImage=(image,src)=>new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=src;});
 export const artReady=Promise.all([loadImage(terrainImage,'/assets/terrain-v3.png'),loadImage(powerImage,'/assets/power-effects-v4.png')]);
